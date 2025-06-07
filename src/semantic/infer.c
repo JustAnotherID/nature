@@ -613,7 +613,17 @@ static bool literal_as_check(module_t *m, ast_literal_t *literal, type_t target_
     type_kind target_kind = cross_kind_trans(target_type.kind);
 
     if (is_integer(literal->kind) && is_integer(target_type.kind)) {
-        int64_t i = atoll(literal->value);
+        char *convert_endptr;
+        integer i;
+        const bool is_unsigned = is_unsigned_integer(literal->kind);
+        if (is_unsigned) {
+            i.u = strtoull(literal->value, &convert_endptr, 0);
+        } else {
+            i.s = strtoll(literal->value, &convert_endptr, 0);
+        }
+        if (*convert_endptr != '\0') {
+            return false;
+        }
         return integer_range_check(target_kind, i);
     }
 
@@ -2506,7 +2516,17 @@ static type_t infer_literal(module_t *m, ast_expr_t *expr, type_t target_type) {
 
     // float 转换为 int 会导致数据丢失，所以不进行自动转换, 请手动使用 as 转换
     if (is_integer(literal_type.kind) && is_integer(target_kind)) {
-        int64_t i = atoll(literal->value);
+        char *convert_endptr;
+        integer i;
+        const bool is_unsigned = is_unsigned_integer(literal->kind);
+        if (is_unsigned) {
+            i.u = strtoull(literal->value, &convert_endptr, 0);
+        } else {
+            i.s = strtoll(literal->value, &convert_endptr, 0);
+        }
+        if (*convert_endptr != '\0') {
+            INFER_ASSERTF(false, "covert '%s' to number failed", literal->value)
+        }
         if (integer_range_check(target_kind, i)) { // range 匹配直接返回，否则应该直接报错
             literal->kind = target_kind;
             return target_type;

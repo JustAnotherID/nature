@@ -3075,10 +3075,7 @@ static lir_operand_t *linear_literal(module_t *m, ast_expr_t expr, lir_operand_t
 
     if (is_integer(literal->kind)) {
         char *convert_endptr;
-        union {
-            uint64_t u;
-            int64_t s;
-        } i;
+        integer i;
         const bool is_unsigned = is_unsigned_integer(literal->kind);
 
         if (is_unsigned) {

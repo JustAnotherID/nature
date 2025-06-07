@@ -844,24 +844,29 @@ static inline type_t number_type_lift(type_kind left, type_kind right) {
     return type_kind_new(right);
 }
 
-static inline bool integer_range_check(type_kind kind, int64_t i) {
+typedef union {
+    uint64_t u;
+    int64_t s;
+} integer;
+
+static inline bool integer_range_check(const type_kind kind, const integer i) {
     switch (kind) {
         case TYPE_UINT8:
-            return i >= 0 && i <= UINT8_MAX;
+            return i.u <= UINT8_MAX;
         case TYPE_INT8:
-            return i >= INT8_MIN && i <= INT8_MAX;
+            return i.s >= INT8_MIN && i.s <= INT8_MAX;
         case TYPE_UINT16:
-            return i >= 0 && i <= UINT16_MAX;
+            return i.u <= UINT16_MAX;
         case TYPE_INT16:
-            return i >= INT16_MIN && i <= INT16_MAX;
+            return i.s >= INT16_MIN && i.s <= INT16_MAX;
         case TYPE_UINT32:
-            return i >= 0 && i <= UINT32_MAX;
+            return i.u <= UINT32_MAX;
         case TYPE_INT32:
-            return i >= INT32_MIN && i <= INT32_MAX;
+            return i.s >= INT32_MIN && i.s <= INT32_MAX;
         case TYPE_UINT64:
-            return i >= 0 && i <= UINT64_MAX;
+            return i.u <= UINT64_MAX;
         case TYPE_INT64:
-            return i >= INT64_MIN && i <= INT64_MAX;
+            return i.s >= INT64_MIN && i.s <= INT64_MAX;
         default:
             return false;
     }
