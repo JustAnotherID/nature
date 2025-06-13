@@ -1,6 +1,10 @@
 import fmt.utils as *
 import strings
 
+type stringer = interface{
+    fn str():string
+}
+
 fn sprintf(string format, ...[any] args):string {
     var end = format.len()
     var result = vec_new<u8>(0, 0)
@@ -161,32 +165,32 @@ fn sprintf(string format, ...[any] args):string {
         // 各种类型的值进行 string 处理
         if c == ascii('v') {
             string s = ''
-            if arg is int {
-                 s = itos(arg)
+            if arg is null {
+                s = 'null'
             }  else if arg is i8 {
-                 s = itos(arg)
+                s = itos(arg)
             }  else if arg is i16 {
-                 s = itos(arg)
+                s = itos(arg)
             } else if arg is i32 {
-                 s = itos(arg)
+                s = itos(arg)
             } else if arg is i64 {
-                 s = itos(arg)
+                s = itos(arg)
             } else if arg is uint {
-                 s = utos(arg)
+                s = utos(arg)
             } else if arg is u8 {
-                 s = utos(arg)
+                s = utos(arg)
             }  else if arg is u16 {
-                 s = utos(arg)
+                s = utos(arg)
             } else if arg is u32 {
-                 s = utos(arg)
+                s = utos(arg)
             } else if arg is u64 {
-                 s = utos(arg)
+                s = utos(arg)
             } else if arg is float {
-                 s = ftos(arg)
+                s = ftos(arg)
             } else if arg is f64 {
-                 s = ftos(arg)
+                s = ftos(arg)
             } else if arg is f32 {
-                 s = ftos(arg)
+                s = ftos(arg)
             } else if arg is bool {
                 if arg {
                     s = 'true'
@@ -195,6 +199,10 @@ fn sprintf(string format, ...[any] args):string {
                 }
             } else if arg is string {
                 s = arg // auto as
+            } else if arg is stringer {
+                s = arg.str()
+            } else if arg is ptr<stringer> {
+                s = (*arg).str()
             } else {
                 s = '%!v'
             }

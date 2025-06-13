@@ -1,0 +1,63 @@
+=== test_builtin_str
+--- main.n
+import fmt
+
+type custom_s:fmt.stringer = struct{
+    string inner
+}
+
+fn custom_s.str(): string {
+    return self.inner
+}
+
+fn main() {
+    println(fmt.sprintf('%v', null))
+
+    println(fmt.sprintf('%v', 1 as int))
+    println(fmt.sprintf('%v', 1 as i8))
+    println(fmt.sprintf('%v', 1 as i16))
+    println(fmt.sprintf('%v', 1 as i32))
+    println(fmt.sprintf('%v', 1 as i64))
+
+    println(fmt.sprintf('%v', 2 as uint))
+    println(fmt.sprintf('%v', 2 as u8))
+    println(fmt.sprintf('%v', 2 as u16))
+    println(fmt.sprintf('%v', 2 as u32))
+    println(fmt.sprintf('%v', 2 as u64))
+
+    println(fmt.sprintf('%v', 1.1 as float))
+    println(fmt.sprintf('%v', 1.1 as f32))
+    println(fmt.sprintf('%v', 1.1 as f64))
+
+    println(fmt.sprintf('%v', true))
+    println(fmt.sprintf('%v', false))
+
+    println(fmt.sprintf('%v', 'hello world'))
+
+    var foo = custom_s{inner = 'foo'}
+    println(fmt.sprintf('%v', foo))
+
+    var bar = new custom_s(inner = 'bar')
+    println(fmt.sprintf('%v', bar))
+}
+
+--- output.txt
+null
+1
+1
+1
+1
+1
+2
+2
+2
+2
+2
+1.100000
+1.100000
+1.100000
+true
+false
+hello world
+foo
+bar
